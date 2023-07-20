@@ -16,7 +16,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 //	SELECT * FROM question WHERE subject LIKE () or content LIKE()
 	List<Question> findBySubjectLikeOrContentLike(String subject, String content);
 	
-//	SELECT * FROM question ORDER BY create_date ASC,DESC;
-	List<Question> findAllByOrderByCreateDateAsc();
-	List<Question> findAllByOrderByCreateDateDesc();
+//	SELECT * FROM question ORDER BY regdate ASC,DESC;
+	List<Question> findAllByOrderByRegdateAsc();
+	List<Question> findAllByOrderByRegdateDesc();
 }
