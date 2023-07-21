@@ -22,11 +22,17 @@ repositories {
 }
 
 dependencies {
+	// thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	// spring starter web (MVC)
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// lombok
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
+	// spring devtool
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// Junit Test Lib
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// H2DB
 	runtimeOnly 'com.h2database:h2'

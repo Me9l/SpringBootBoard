@@ -1,0 +1,70 @@
+// Library List
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-laylout-dialect'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// H2DB
+	runtimeOnly 'com.h2database:h2'
+	// JPA Library
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+}
+
+Spring Boot LOGIC
+
+// client ==> controller ==> Service ==> Repository (DB에 직접 접근) ==> Entity ==> DB
+
+@Autowired : 객체를 Spring Container 에서 생성 후 주입 ( DI(dependency injection) 의존성 주입 )
+	-- Test 코드에서 사용. 동일한 타입을 찾아 객체 생성.
+	
+1. JPA 라이브러리 추가
+2. JPA 세팅 ( DB , Entity class )
+3. Entity class : question, answer
+4. H2DB : local2 에 접속해서 생성 확인
+5. questionRepository , AnswerRepository
+6. jUnitTest 를 사용해 Question table블에 값 insert
+7. jUnitTest 를 사용해 DB의 값을 불러와서 확인 테스트
+
+==========================================
+1. QuestionRepository
+	- subject 컬럼을 기준으로 검색 "%날씨%"
+		SELECT * FROM question WHERE subject LIKE '%?%'
+	- content 컬럼을 기준으로 검색 "%내용%"
+		SELECT * FROM question WHERE content LIKE '%?%'
+	- subject or content 검색
+
+2. ANSWER TABLE에 값 INSERT : Question_id를 참조해서 INSERT
+	answerRepository.save()
+
+// Spring Boot MVC logic
+
+client ==> controller ==> Service ==> Repository ==> Entity ==> DB
+Service Layer
+- 반복되는 코드를 줄일 수 있다.
+- 보안
+* controller 에서 직접 Repository에 접근하지 않는다.
+
+Spring IoC container에 Bean 생성 annotation
+- Spring은 객체를 생성해서 container에 load
+- @Component	: 일반적인 객체를 Bean에 등록
+- @Controller	: Controller class  | 1. Client Request > 2. Service(business Logic) > 3.View return
+- @Service		: Service class		| Business Logic, Repository process
+- @Repository	: Repository class	| DB의 CRUD method
+
+DI ( Dependency Injection | 의존성 주입 )
+- @Autowired	: 타입을 검색해서 IoC container의 객체를 주입 ( 비슷한 타입의 객체가 여러개인 경우 충돌 발생 가능 )
+- 생성자를 이용한 주입 : @RequiredArgsConstructor (클래스에 할당)
+					- private final QuestionRepository QuestionRepository;
+- Setter를 이용한 주입
+
+----------------------------------------------
+1. question 테이블의 전체 레코드를 읽어와서 view로 출력
+	/question/list 요청에 대한 question_list.html
+	
+2. question 테이블 글 상세 (content) 출력
+	/question/detail/{id} 요청으로 받는 id값으로 content값을 얻어서 Model에 담아 출력 question_detail.html
+
+3. 상세 페이지 Form (답변등록)

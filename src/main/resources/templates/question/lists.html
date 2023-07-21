@@ -17,7 +17,9 @@
 		<tbody>
 			<tr th:each = "question : ${questionList}">
 				<td th:text="${question.id}">글번호</td>
-				<td th:text="${question.subject}">제목이 표시됩니다.</td>
+				<td>
+					<a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}">제목이 표시됩니다.</a>
+				</td>
 				<td th:text="${question.regdate}">작성일이 표시됩니다.</td>
 			</tr>
 		</tbody>

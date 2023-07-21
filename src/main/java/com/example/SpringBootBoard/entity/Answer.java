@@ -22,10 +22,10 @@ public class Answer {
 	
 	@Column(columnDefinition = "text")
 	private String content;
-
-	@ManyToOne
-	private Question question;
 	
 	@CreatedDate
 	private LocalDateTime regdate;
+
+	@ManyToOne
+	private Question question;
 }

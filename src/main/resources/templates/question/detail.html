@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>detail page</title>
+</head>
+<body>
+	<h2 th:text="${question.subject}">제목</h2>
+	<div th:text="${question.content}">내용</div>
+	
+	<!--
+	답변글 갯수 출력
+	#lists.size(question.answerList) : List에 저장된 객체의 갯수 출력.
+	-->
+	<h5 th:text="|${#lists.size(question.answerList)} 개의 답변.|"></h5>
+	
+	<!-- 답변글 출력 -->
+	<div>
+		<ul>
+			<li th:each="answer : ${question.answerList}" th:text="|${answer.content} &ensp; ${answer.regdate}|"></li>
+		</ul>
+	</div>
+	
+	<!-- 답변 등록 -->
+	<!-- name값은 Entity의 컬럼과 매칭시켜야한다. -->
+	<form th:action="@{|/answer/create/${question.id}|}" method="post">
+		<textarea name="content" id="content" rows="3" cols="50"></textarea><br/>
+		<input type="submit" value="답변등록" />
+	</form>
+</body>
+</html>
