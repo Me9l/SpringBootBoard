@@ -68,3 +68,8 @@ DI ( Dependency Injection | 의존성 주입 )
 	/question/detail/{id} 요청으로 받는 id값으로 content값을 얻어서 Model에 담아 출력 question_detail.html
 
 3. 상세 페이지 Form (답변등록)
+
+----------------------------------------------
+src/main/resources
+- templates : thymeLeaf view files ( *.html )
+- static	: 외부 Css, JScript files ( *.css , *.js )

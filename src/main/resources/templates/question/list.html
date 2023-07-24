@@ -1,0 +1,30 @@
+<html layout:decorate="~{layout}">
+	<!-- Model 객체의 값 받아서 출력 -->
+	<div layout:fragment="content" class="container my-3">
+		<table class="table">
+			<thead class="table-dark">
+				<tr>
+					<th>번호</th>
+					<th>글번호</th>
+					<th>제목</th>
+					<th>작성일</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="question , loop : ${questionList}">
+					<td th:text="${loop.count}">번호</td>
+					<td th:text="${question.id}">글번호</td>
+					<td>
+						<a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}">
+						제목
+						</a>
+					</td>
+					<td th:text="${#temporals.format(question.regdate, 'yy-MM-dd HH:mm:ss')}">작성일</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<a th:href="@{question/create}" class="btn btn-primary">글 쓰기</a>
+		
+	</div>
+</html>

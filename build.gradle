@@ -34,10 +34,17 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	// Junit Test Lib
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 	// H2DB
 	runtimeOnly 'com.h2database:h2'
 	// JPA Library
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//Spring 유효성 검사 라이브러리 : form에서 빈값이나 글자수 제한 
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    //oracle Library
+	implementation 'com.oracle.database.jdbc:ojdbc11'
+	//JDBC
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 }
 
 tasks.named('test') {
