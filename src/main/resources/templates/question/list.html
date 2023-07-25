@@ -11,8 +11,8 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="question , loop : ${questionList}">
-					<td th:text="${loop.count}">번호</td>
+				<tr th:each="question , loop : ${paging}">
+					<td th:text="${paging.getTotalElements -(paging.number * paging.size) - loop.index}">번호</td>
 					<td th:text="${question.id}">글번호</td>
 					<td>
 						<a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}">
@@ -23,8 +23,36 @@
 				</tr>
 			</tbody>
 		</table>
-		
-		<a th:href="@{question/create}" class="btn btn-primary">글 쓰기</a>
+	<!-- S : Paging -->
+    <div th:if="${!paging.isEmpty()}">
+        <ul class="pagination justify-content-center">
+			<!-- S : previous button -->
+            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                <a class="page-link"
+                    th:href="@{|?page=${paging.number-1}|}">
+                    <span>Prev</span>
+                </a>
+            </li>
+			<!-- E : previous button -->
+			<!-- S : Page button -->
+            <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+            	th:if="${page >= paging.number-5 and page <= paging.number+5 }"
+                th:classappend="${page == paging.number} ? 'active'" 
+                class="page-item">
+                <a th:text="${page+1}" class="page-link" th:href="@{|?page=${page}|}"></a>
+            </li>
+			<!-- E : Page button -->
+			<!-- S : Next button -->
+            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                    <span>Next</span>
+                </a>
+            </li>
+			<!-- E : Next button -->            
+        </ul>
+    </div>
+	<!-- E : Paging -->
+		<a th:href="@{create}" class="btn btn-primary">글 쓰기</a>
 		
 	</div>
 </html>

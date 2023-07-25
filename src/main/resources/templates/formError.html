@@ -1,0 +1,6 @@
+<!-- S : validation check --> 
+<div th:fragment="formErrorFragment" class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+	
+	<div th:each = "err : ${#fields.allErrors()}" th:text ="${err}"></div>
+</div>
+<!-- E : validation check -->
