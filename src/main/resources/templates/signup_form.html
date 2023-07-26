@@ -1,0 +1,34 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+    <div class="my-3 border-bottom">
+        <div>
+            <h4>회원가입</h4>
+        </div>
+    </div>
+    <form th:action="@{/user/signup}" th:object="${userForm}" method="post">
+        <div class="mb-3">
+            <label for="userid" class="form-label">ID</label>
+            <input type="text" th:field="*{userid}" class="form-control">
+            <span th:if="${#fields.hasErrors('userid')}" th:errors="*{userid}" style="color: red;"></span>
+            <!-- th:field="*{userid}" : name,id,value 속성과 matching -->
+        </div>
+        <div class="mb-3">
+            <label for="pw1" class="form-label">Enter Password</label>
+            <input type="password" th:field="*{pw1}" class="form-control">
+            <span th:if="${#fields.hasErrors('pw1')}" th:errors="*{pw1}" style="color: red;"></span>
+        </div>
+        <div class="mb-3">
+            <label for="pw2" class="form-label">check Password</label>
+            <input type="password" th:field="*{pw2}" class="form-control">
+            <span th:if="${#fields.hasErrors('pw2')}" th:errors="*{pw2}" style="color: red;"></span>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" th:field="*{email}" class="form-control">
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;"></span>
+        </div>
+		<div th:replace="~{formError :: formErrorFragment}"></div>
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+</div>
+</html>
