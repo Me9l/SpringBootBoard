@@ -1,5 +1,7 @@
 package com.example.SpringBootBoard.controller;
 
+import java.security.Principal;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.SpringBootBoard.dto.AnswerForm;
 import com.example.SpringBootBoard.dto.QuestionForm;
 import com.example.SpringBootBoard.entity.Question;
+import com.example.SpringBootBoard.entity.Users;
 import com.example.SpringBootBoard.service.QuestionService;
+import com.example.SpringBootBoard.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class QuestionController {
 	
 	private final QuestionService questionService;
+	private final UserService userService;
 
 	// QuestionList 요청 처리
 	@GetMapping("/list")
@@ -50,12 +55,14 @@ public class QuestionController {
 	
 	// 질문 등록 요청 처리
 	@PostMapping("/create")
-	public String questionCreate(@Valid QuestionForm questionForm,BindingResult bindingResult) {
-		
+	public String questionCreate(@Valid QuestionForm questionForm,BindingResult bindingResult, Principal principal) {
+								//@Valid questionForm 의 유효성 검사 // 유효성 문제가 있으면 bindingResult에 전송.
 		if ( bindingResult.hasErrors() ) {
 			return "question/form";
 		}
-		questionService.createQuestion(questionForm.getSubject(), questionForm.getContent());
+		Users users =
+				userService.getUser(principal.getName());
+		questionService.createQuestion(questionForm.getSubject(), questionForm.getContent(), users);
 		return "redirect:/question/list";
 	}
 }

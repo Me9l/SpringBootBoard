@@ -2,6 +2,8 @@ package com.example.SpringBootBoard.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,6 +37,21 @@ public class SecurityConfig {
 		// H2Console 에서 frame 작동 설정.
 		.headers( (headers)->headers.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)) )
 		
+		// Login setting : Controller 에서 처리하지 않고 Spring Security 에서 처리하도록 설정.
+		.formLogin(
+			(formLogin)->formLogin
+			.usernameParameter("userid")
+			.loginPage("/user/login")	// POST요청을 Security 에서 처리.
+			.defaultSuccessUrl("/")		// 인증 성공시 이동할 경로 : "/"
+			)
+		// Logout setting
+		.logout(
+			(logout)->logout
+			.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+			.logoutSuccessUrl("/")
+			.invalidateHttpSession(true)
+			)
+
 		;
 		return http.build();
 	}
@@ -44,5 +61,12 @@ public class SecurityConfig {
 		// PasswordEncoder : Interface
 		// BCryptPasswordEncoder : Implements
 		return new BCryptPasswordEncoder();
+	}
+	
+	// 인증 처리하는 객체의 Bean 등록
+	// UserSecurityService.java 를 위한 bean 등록
+	@Bean
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
 	}
 }

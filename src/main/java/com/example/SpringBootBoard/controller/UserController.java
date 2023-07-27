@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.SpringBootBoard.dto.UserForm;
-import com.example.SpringBootBoard.entity.User;
+import com.example.SpringBootBoard.entity.Users;
 import com.example.SpringBootBoard.service.UserService;
 
 import jakarta.validation.Valid;
@@ -35,9 +35,9 @@ public class UserController {
 		System.out.println("RequestParam > password : " + password);
 		System.out.println("RequestParam > email : " + email);
 		
-		User siteUser =
+		Users users =
 		userService.create(userid, password, email);
-		
+		System.out.println(users.getUserid());
 		return "redirect:/";
 	}
 	
@@ -63,8 +63,22 @@ public class UserController {
 			return "signup_form";
 		}
 		// 3. Service.create(userid,password,email) 호출 및 저장.
-		userService.create(userForm.getUserid(), userForm.getPw1(), userForm.getEmail());
+		try {
+			userService.create(userForm.getUserid(), userForm.getPw1(), userForm.getEmail());
+			} catch (Exception e) {
+				e.printStackTrace();
+				bindingResult.reject("signupFailed","이미 등록된 아이디 입니다.");
+				bindingResult.reject("signupFailed",e.getMessage());
+				return "signup_form";
+			}
+			return "redirect:/";
+		}
 		
-		return "redirect:/";
-	}
+		// login_form
+		@GetMapping("/login")
+		public String login() {
+			return "login_form";
+		}
+		
+		// !Important : /user/login : post요청시 Spring Security가 직접 처리.
 }

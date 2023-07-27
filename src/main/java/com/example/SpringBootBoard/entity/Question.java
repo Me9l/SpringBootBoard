@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class Question {
 	private String subject;
 	
 	@Column(columnDefinition = "Text")
+//	@Column(length=1000)	// Oracle
 	private String content;
 	
 	@CreatedDate
@@ -34,4 +36,7 @@ public class Question {
 	
 	@OneToMany(mappedBy = "question" , cascade = CascadeType.REMOVE)
 	private List<Answer> answerList;
+	
+	@ManyToOne
+	private Users author;
 }

@@ -21,6 +21,7 @@ public class Answer {
 	private Integer id;
 	
 	@Column(columnDefinition = "text")
+//	@Column(length=1000)	// Oracle
 	private String content;
 	
 	@CreatedDate
@@ -28,4 +29,7 @@ public class Answer {
 
 	@ManyToOne
 	private Question question;
+	
+	@ManyToOne
+	private Users author;
 }

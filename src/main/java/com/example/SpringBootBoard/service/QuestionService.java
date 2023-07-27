@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.SpringBootBoard.entity.Question;
+import com.example.SpringBootBoard.entity.Users;
 import com.example.SpringBootBoard.exception.DataNotFoundException;
 import com.example.SpringBootBoard.repository.QuestionRepository;
 
@@ -51,18 +52,14 @@ public class QuestionService {
 			throw new DataNotFoundException("Can't find value.. check your data.");
 		}
 	}
-	
-	// 전체 조회
-	public List<Question> getAllQuestion() {
-		return  questionRepository.findAllByOrderByRegdateDesc();
-	}
-	
+
 	// 질문 저장
-	public void createQuestion(String subject,String content) {
+	public void createQuestion(String subject, String content, Users user) {
 		Question question = new Question();
 		question.setSubject(subject);
 		question.setContent(content);
 		question.setRegdate(LocalDateTime.now());
+		question.setAuthor(user);
 		
 		questionRepository.save(question);
 	}

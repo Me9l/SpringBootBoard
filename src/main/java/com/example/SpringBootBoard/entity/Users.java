@@ -12,7 +12,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity
-public class User {		// 사용자 정보를 입력하는 테이블과 매핑된 클래스
+public class Users {		// 사용자 정보를 입력하는 테이블과 매핑된 클래스
 	
 	@Id		// Primary Key
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
