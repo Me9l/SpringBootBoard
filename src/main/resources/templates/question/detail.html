@@ -12,9 +12,26 @@
                     <div th:text="${#temporals.format(question.regdate, 'yy-MM-dd HH:mm:ss')}"></div>
                 </div>
             </div>
+            <!-- 질문 수정 / 삭제-->
+	        <div>
+				<a class="btn btn-sm btn-outline-secondary"
+				sec:authorize="isAuthenticated()"
+				th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.userid}"
+				th:href="@{|/question/modify/${question.id}|}"
+				th:text="수정"
+				></a>
+				
+				<a class="btn btn-sm btn-outline-danger delete"
+				sec:authorize="isAuthenticated()"
+				th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.userid}"
+				th:href="@{|/question/delete/${question.id}|}"
+				th:text="삭제"
+				></a>
+			</div>
         </div>
     </div>
-    <!-- 답변 Count -->
+    
+    <!-- Answer Count -->
     <h5 class="border-bottom my-3 py-2" 
         th:text="|${#lists.size(question.answerList)}개의 댓글.|"></h5>
     <!-- S : 답변 -->
@@ -23,6 +40,7 @@
             <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
             <div class="d-flex justify-content-end">
                 <div class="badge bg-light text-dark p-2 text-start">
+					<div th:if="${answer.author != null}" th:text="${answer.author.userid}"></div>
                     <div th:text="${#temporals.format(answer.regdate, 'yy-MM-dd HH:mm:ss')}"></div>
                 </div>
             </div>
@@ -30,11 +48,16 @@
     </div>
     <!-- E : 답변 -->
     <!-- 답변 작성 -->
+    <h5> 댓글 작성 </h5>
     <form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
 			<!-- S : formError -->
 			<div th:replace="~{formError::formErrorFragment}"></div>
 			<!-- E : formError -->
-		<textarea th:field="*{content}" rows="10" class="form-control"></textarea>
+
+		<!-- 비로그인 상태 에서 보이는 <textarea> -->
+        <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="5" class="form-control disabled w-100" placeholder="로그인 후 이용하세요."></textarea>
+		<!-- 로그인 상태 에서 보이는 <textarea> -->
+        <textarea sec:authorize="isAuthenticated()" th:field="*{content}" rows="5" class="form-control w-100" style="resize: none;"></textarea>
         <input type="submit" value="답변등록" class="btn btn-primary my-2">
     </form>
 </div>

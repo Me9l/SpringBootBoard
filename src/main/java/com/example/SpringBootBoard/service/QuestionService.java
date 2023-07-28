@@ -53,7 +53,7 @@ public class QuestionService {
 		}
 	}
 
-	// 질문 저장
+	// 질문 저장 (글 등록)
 	public void createQuestion(String subject, String content, Users user) {
 		Question question = new Question();
 		question.setSubject(subject);
@@ -63,4 +63,21 @@ public class QuestionService {
 		
 		questionRepository.save(question);
 	}
+	// 글 수정
+		public void modifyQuestion( Question question, String subject, String content ) {
+			
+//			System.out.println("수정된 제목 : " + subject);
+//			System.out.println("수정된 내용 : " + content);
+			question.setSubject(subject);
+			question.setContent(content);
+			question.setRegdate(LocalDateTime.now());
+			
+			questionRepository.save(question);
+		}
+		
+		// 글 삭제
+		public void deleteQuestion( Question question ) {
+			// 삭제할 Question 객체를 가져온다.
+			questionRepository.delete(question);
+		}
 }

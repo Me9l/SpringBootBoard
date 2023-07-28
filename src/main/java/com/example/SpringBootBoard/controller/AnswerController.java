@@ -2,6 +2,7 @@ package com.example.SpringBootBoard.controller;
 
 import java.security.Principal;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,7 @@ public class AnswerController {
 	private final AnswerService answerService;
 	private final UserService userService;
 	
+	@PreAuthorize("isAuthenticated()") //인증된 사용자가 아니면 login 페이지로 redirect
 	@PostMapping("/create/{id}")
 	public String createAnswer(@PathVariable Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult, Model model, Principal principal) {
 		Question question = questionService.getQuestion(id);
