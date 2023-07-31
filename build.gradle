@@ -35,16 +35,21 @@ dependencies {
 	// Junit Test Lib
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	// DB
 	// H2DB
 	runtimeOnly 'com.h2database:h2'
-	// JPA Library
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	//Spring a : form에서 빈값이나 글자수 제한 
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
     //oracle Library
 	implementation 'com.oracle.database.jdbc:ojdbc11'
+	// MySQL Driver
+	implementation 'com.mysql:mysql-connector-j'
+	
 	//JDBC
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
+	// JPA Library
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//Spring Validation Lib : form에서 빈값이나 글자수 제한 
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 	// Spring Security Lib
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'

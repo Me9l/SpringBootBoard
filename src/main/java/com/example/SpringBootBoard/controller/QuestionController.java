@@ -69,7 +69,7 @@ public class QuestionController {
 		return "redirect:/question/list";
 	}
 	
-	// 글 수정
+	// 글 수정 ( 페이지 이동 )
 		@PreAuthorize("isAuthenticated()")
 		@GetMapping("/modify/{id}")
 		public String questionModify(
@@ -115,5 +115,22 @@ public class QuestionController {
 			questionService.deleteQuestion(question);
 			
 			return "redirect:/";	// http://localhost:8585/
+		}
+		
+		// 추천 기능
+		@GetMapping("/vote/{id}")
+		public String Vote(
+				@PathVariable Integer id,
+				Principal principal
+				) {
+			// 전달받은 변수로 question 객체 요청
+			Question question = questionService.getQuestion(id);
+			
+			// principal 객체로 로그인한 Users 정보 요청
+			Users users = userService.getUser(principal.getName());
+			
+			questionService.voteQuestion(question, users);
+			
+			return String.format("redirect:/question/detail/%s", id);
 		}
 }
