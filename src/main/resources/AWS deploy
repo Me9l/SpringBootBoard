@@ -1,0 +1,109 @@
+Run ( 실행 ) > Run Configurations > Gradle Task
+프로젝트 우클릭 > Run AS.. > Run Configurations > Gradle Task
+
+Gradle Tasks > add
+bootJar
+
+Working Directory >
+${workspace_loc:/[프로젝트명]}
+입력 후 Run
+
+C:\spring-workspace\test_demo\build\libs 에 jar파일 생긴다.
+C:\[워크스페이스명]\[프로젝트명]\build\libs
+
+test_project-0.0.1-SNAPSHOT.jar
+[프로젝트명] - [버전] - SNAPSHOT.jar
+
+1. AWS EC2 Ubuntu Linux 인스턴스 (VM) 생성
+	- JAR : 내장 톰캣으로 배포 , ( ThymeLeaf 사용시 JAR 배포 )
+	- WAR : 외장 톰캣 사용. ( JSP 사용시 WAR 배포 )
+
+	AWS ubuntu VM 생성
+	
+	putty 접속
+	ubuntu
+	
+	$ pwd ( 현재 경로 확인 ) >> /home/ubuntu
+	$ hostname ( 호스트네임 확인 )
+	
+	- 컴퓨터 이름 변경
+	$ sudo vi /etc/hostname
+	$ dd > i > srv1 > esc > : > wq
+	$ sudo reboot
+	>>> 재부팅 후
+	$ ubuntu 로 접속
+	$ hostname ( 바뀐 호스트 네임 확인 )
+	
+	- 시스템 시간 변경
+	$ sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+	
+	- VM에 JDK 설치 ( jar file 압축 풀기 )
+	$ sudo apt update
+	$ sudo apt install openjdk-17-jre-headless
+	$ java -version	으로 설치 확인
+	$ mkdir [프로젝트 저장할 디렉토리 생성] >> /home/ubuntu/[생성된폴더]
+	
+	- 개발된파일.jar 서버에 전송
+	파일질라로 AWS VM(우분투)에 접속
+	mkdir한 폴더에 jar파일 전송
+	
+	- VM 에서 jar 실행
+	putty 에서 확인
+	$ cd [프로젝트 전송한 폴더명]
+	$ ls >> project-0.0.1-SNAPSHOT.jar
+	$ java -jar project-0.0.1-SNAPSHOT.jar
+	
+	- AWS 방화벽 열기
+	EC2 > 인스턴스 > 보안 > 보안그룹 > 인바운드 규칙 > 인바운드 규칙 편집 > 규칙 추가
+	유형 : 사용자 지정 TCP
+	포트범위 : 8585
+	소스 : Anywhere IPv4
+	
+	- Putty 에서 실행중인 프로세스 확인
+	$ ps -ef (프로세스 전체 내용 출력 )
+	$ ps -ef | grep java | grep [프로젝트 명] (java 와 [프로젝트 명] 이 포함된 프로세스만 출력)
+	
+	- PID 확인
+	UID : 계정에 부여되는 고유 번호
+	PID : 프로세스에 부여되는 고유 번호
+	GID : 그룹에게 부여되는 고유 번호
+	
+	프로세스 강제 종료 : ( 실행중인 서비스 강제 종료 )
+	$ sudo kill -9 [PID]
+	
+	- 80번 포트로 실행 ( 기본 포트 : 8080 , 사용자 지정포트는 sudo 명령 없이도 사용 가능 )
+	80번 포트는 root 권한으로 실행 해야 하므로 sudo 명령이 필요하다.
+	$ sudo java -Dserver.port=80 -jar test_demo-0.0.1-SNAPSHOT.jar
+	
+	- 배포시 백그라운드로 실행 (&)
+	포그라운드 작동 : $ sudo java -jar test_demo-0.0.2-SNAPSHOT.jar
+	백그라운드 작동 : $ sudo java -jar test_demo-0.0.1-SNAPSHOT.jar &
+	
+	==========================================
+	- 서비스 시작 스크립트 만들기 : start.sh
+	#!/bin/bash
+	
+	JAR=test_demo/test_demo-0.0.1-SNAPSHOT.jar
+	LOG=/home/ubuntu/test_demo/test_demo.log
+	
+	nohup java -jar $JAR > $LOG 2>&1 &
+	==========================================
+	실행 권한 부여 : sudo chmod +x start.sh
+	
+	
+	==========================================
+	- 서비스 종료 스크립트 만들기 : stop.sh
+	#!/bin/bash
+	test_demo_PID=$(ps -ef | grep java | grep test_demo | awk '{print $2}')
+	
+	if [ -z "$test_demo_PID" ];
+	then
+		echo "test_demo is not running"
+	else
+		kill -9 $test_demo_PID
+		echo "test_demo has Stopped"
+	fi
+	==========================================
+	실행 권한 부여 : sudo chmod +x stop.sh
+
+	

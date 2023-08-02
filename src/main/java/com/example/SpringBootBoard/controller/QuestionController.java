@@ -3,6 +3,7 @@ package com.example.SpringBootBoard.controller;
 import java.security.Principal;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.SpringBootBoard.dto.AnswerForm;
 import com.example.SpringBootBoard.dto.QuestionForm;
@@ -33,10 +35,14 @@ public class QuestionController {
 
 	// QuestionList 요청 처리
 	@GetMapping("/list")
-	public String questionList(Model model,@RequestParam(value="page",defaultValue="0") int page) {
+	public String questionList(
+			Model model,
+			@RequestParam(value = "page",defaultValue="0") int page,
+			@RequestParam(value = "kw", defaultValue = "") String kw) {
 //		List<Question> questionList = questionService.getAllQuestion();
-		Page<Question> paging = questionService.getQuestionList(page);
+		Page<Question> paging = questionService.getQuestionList(page, kw);
 		model.addAttribute("paging",paging);
+		model.addAttribute("kw",kw);
 		return "question/list";
 	}
 	
@@ -99,7 +105,12 @@ public class QuestionController {
 				return "question/form";
 			}
 			
-			Question question = questionService.getQuestion(id);		
+			Question question = questionService.getQuestion(id);
+			
+			// 접속 계정이 작성자가 아닐때 예외 발생
+			if ( !question.getAuthor().getUserid().equals(principal.getName())) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다");
+			}
 			questionService.modifyQuestion(question, questionForm.getSubject(), questionForm.getContent());
 			
 			return String.format("redirect:/question/detail/%s", id);
@@ -114,10 +125,11 @@ public class QuestionController {
 			Question question = questionService.getQuestion(id);
 			questionService.deleteQuestion(question);
 			
-			return "redirect:/";	// http://localhost:8585/
+			return "redirect:/";
 		}
 		
 		// 추천 기능
+		@PreAuthorize("isAuthenticated()")
 		@GetMapping("/vote/{id}")
 		public String Vote(
 				@PathVariable Integer id,

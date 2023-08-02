@@ -30,15 +30,15 @@ public class QuestionService {
 	}
 	
 	// 전체 List 조회 ( paging )
-	public Page<Question> getQuestionList(int page) {
+	public Page<Question> getQuestionList(int page, String kw) {
 		// Pageable 객체에 특정 컬럼을 정렬할 객체를 생성해서 인자로 넣는다.
 		List<Sort.Order> sort = new ArrayList<>();
-		sort.add(Sort.Order.desc("regdate"));
+		sort.add(Sort.Order.desc("id"));
 		// page : client에서 parameter로 넘긴 페이지 번호
 		// 10 : 한 페이지에서 출력할 레코드 수
 		// Sort.by(sort) : 정렬할 컬럼
 		Pageable pageable = PageRequest.of(page, 10,Sort.by(sort));
-		Page<Question> pageQuestion = questionRepository.findAll(pageable);
+		Page<Question> pageQuestion = questionRepository.findAllByKeyword(kw, pageable);
 		return pageQuestion;
 	}
 	
@@ -81,7 +81,7 @@ public class QuestionService {
 		questionRepository.delete(question);
 	}
 	
-	// 추천
+	// 추천 기능
 	public void voteQuestion( Question question, Users users ) {
 		question.getVote().add(users);
 		questionRepository.save(question);

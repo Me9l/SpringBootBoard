@@ -53,6 +53,9 @@ dependencies {
 	// Spring Security Lib
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+	
+	// Markdown Lib
+	implementation 'org.commonmark:commonmark:0.21.0'
 }
 
 tasks.named('test') {

@@ -28,29 +28,8 @@
 	
 	<!-- footer.html Import -->
 	<div th:replace="~{footer::footerFragment}"></div>
-
-    <!-- Bootstrap JavaScript -->
-    <script th:src="@{/bootstrap.min.js}"></script>
     
-	<script type="text/javascript">
-		const delete_elements = document.getElementsByClassName("delete");
-
-		Array.from(delete_elements).forEach(function(element) {
-			element.addEventListener("click", function() {
-				if (confirm("게시글을 삭제하시겠습니까?")) {
-					location.href = this.dataset.uri;
-				};
-			});
-		});
-
-		const recommend_elements = document.getElementsByClassName("recommend");
-		Array.from(recommend_elements).forEach(function(element) {
-		    element.addEventListener("click", function() {
-		        if(confirm("추천 하시겠습니까?")) {
-		            location.href = this.dataset.uri;
-		        };
-		    });
-		});
-	</script>
+    <th:block layout:fragment="script"></th:block>
+	
 </body>
 </html>

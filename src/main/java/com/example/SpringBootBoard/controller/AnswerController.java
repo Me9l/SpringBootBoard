@@ -83,7 +83,7 @@ public class AnswerController {
 		}
 		
 		if (!answer.getAuthor().getUserid().equals(principal.getName())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"삭제 권한이 없습니다.");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정 권한이 없습니다.");
 		}
 		
 		answerService.modifyAnswer(answer, answerForm.getContent());
